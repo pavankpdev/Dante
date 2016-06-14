@@ -11313,7 +11313,7 @@ if ( typeof define === "function" ) {
       this.setupFirstAndLast = __bind(this.setupFirstAndLast, this);
       this.addClassesToElement = __bind(this.addClassesToElement, this);
       this.handlePaste = __bind(this.handlePaste, this);
-      this.handleArrowForKeyDown = __bind(this.handleArrowForKeyDown, this);
+      this.handleArrowForKey = __bind(this.handleArrowForKey, this);
       this.handleArrow = __bind(this.handleArrow, this);
       this.handleMouseUp = __bind(this.handleMouseUp, this);
       this.selection = __bind(this.selection, this);
@@ -11579,6 +11579,9 @@ if ( typeof define === "function" ) {
     Editor.prototype.getSelectionStart = function() {
       var node;
       node = document.getSelection().anchorNode;
+      if (node === null) {
+        return;
+      }
       if (node.nodeType === 3) {
         return node.parentNode;
       } else {
@@ -11811,7 +11814,7 @@ if ( typeof define === "function" ) {
       }
     };
 
-    Editor.prototype.handleArrowForKeyDown = function(ev) {
+    Editor.prototype.handleArrowForKey = function(ev) {
       var caret_node, current_node, ev_type, n, next_node, num, prev_node;
       caret_node = this.getNode();
       current_node = $(caret_node);
@@ -11819,6 +11822,7 @@ if ( typeof define === "function" ) {
       ev_type = ev.originalEvent.key || ev.originalEvent.keyIdentifier;
       utils.log("ENTER ARROW for key " + ev_type);
       switch (ev_type) {
+        case "ArrowDown":
         case "Down":
           if (_.isUndefined(current_node) || !current_node.exists()) {
             if ($(".is-selected").exists()) {
@@ -11861,6 +11865,7 @@ if ( typeof define === "function" ) {
             return false;
           }
           break;
+        case "ArrowUp":
         case "Up":
           prev_node = current_node.prev();
           utils.log("PREV NODE IS " + (prev_node.attr('class')) + " " + (prev_node.attr('name')));
@@ -12095,7 +12100,7 @@ if ( typeof define === "function" ) {
       if (e.which === ENTER) {
         $(this.el).find(".is-selected").removeClass("is-selected");
         utils.log(this.isLastChar());
-        utils.log("HANDLING WIDGET KEYDOWNS");
+        utils.log("HANDLING WIDGET ENTER");
         _.each(this.widgets, (function(_this) {
           return function(w) {
             if (w.handleEnterKey) {
@@ -12213,7 +12218,7 @@ if ( typeof define === "function" ) {
       }
       if (_.contains([UPARROW, DOWNARROW], e.which)) {
         utils.log(e.which);
-        this.handleArrowForKeyDown(e);
+        this.handleArrowForKey(e);
       }
       if (anchor_node) {
         if (!_.isEmpty($(anchor_node).text())) {
