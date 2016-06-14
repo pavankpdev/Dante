@@ -10881,7 +10881,7 @@ if ( typeof define === "function" ) {
     defaults: {
       image_placeholder: '../images/dante/media-loading-placeholder.png'
     },
-    version: "0.1.1"
+    version: "0.1.2"
   };
 
 }).call(this);
@@ -13723,7 +13723,7 @@ if ( typeof define === "function" ) {
       var control_spacing, control_width, coord_left, coord_top, pull_size, tooltip;
       tooltip = $(this.el);
       control_width = tooltip.find(".control").css("width");
-      control_spacing = tooltip.find(".inlineTooltip-menu").css("padding-left");
+      control_spacing = tooltip.find(".inlineTooltip-button").css("margin-right");
       pull_size = parseInt(control_width.replace(/px/, "")) + parseInt(control_spacing.replace(/px/, ""));
       coord_left = coords.left - pull_size;
       coord_top = coords.top;
@@ -14252,20 +14252,24 @@ if ( typeof define === "function" ) {
 
         /*
         buttons: [
-            'blockquote', 'h2', 'h3', 'p', 'code', 'insertorderedlist', 'insertunorderedlist', 'inserthorizontalrule',
+            'blockquote', 'h3', 'h4', 'p', 'code', 'insertorderedlist', 'insertunorderedlist', 'inserthorizontalrule',
             'indent', 'outdent', 'bold', 'italic', 'underline', 'createlink'
           ]
          */
-        buttons: ['bold', 'italic', 'h2', 'h3', 'h4', 'blockquote', 'createlink']
+        buttons: ['bold', 'italic', 'createlink', 'divider', 'h3', 'h4', 'blockquote']
       };
     };
 
     Menu.prototype.template = function() {
       var html;
-      html = "<div class='dante-menu-linkinput'><input class='dante-menu-input' placeholder='http://'><div class='dante-menu-button'>x</div></div>";
+      html = "<div class='dante-menu-linkinput'><input class='dante-menu-input' placeholder='Paste or type a link'><div class='dante-menu-button'>x</div></div>";
       html += "<ul class='dante-menu-buttons'>";
       _.each(this.config.buttons, function(item) {
-        return html += "<li class='dante-menu-button'><i class=\"dante-icon icon-" + item + "\" data-action=\"" + item + "\"></i></li>";
+        if (item === "divider") {
+          return html += "<li class='dante-menu-divider'></li>";
+        } else {
+          return html += "<li class='dante-menu-button'><i class=\"dante-icon icon-" + item + "\" data-action=\"" + item + "\"></i></li>";
+        }
       });
       html += "</ul>";
       return html;
@@ -14291,7 +14295,12 @@ if ( typeof define === "function" ) {
           input.focus();
         }
       } else {
-        this.menuApply(action);
+        if ($(ev.currentTarget).hasClass("dante-menu-button--disabled")) {
+          utils.log("menu " + action + " item blocked!");
+          ev.preventDefault();
+        } else {
+          this.menuApply(action);
+        }
       }
       return false;
     };
@@ -14452,9 +14461,9 @@ if ( typeof define === "function" ) {
               utils.log("nothing to select");
           }
           if (tag.match(/(?:h[1-6])/i)) {
-            $(_this.el).find(".icon-bold, .icon-italic, .icon-blockquote").parent("li").remove();
+            _this.toggleMenuButtons(_this.el, ".icon-bold, .icon-italic");
           } else if (tag === "indent") {
-            $(_this.el).find(".icon-h2, .icon-h3, .icon-h4, .icon-blockquote").parent("li").remove();
+            _this.toggleMenuButtons(_this.el, ".icon-h3, .icon-h4, .icon-blockquote");
           }
           return _this.highlight(tag);
         };
@@ -14463,6 +14472,10 @@ if ( typeof define === "function" ) {
 
     Menu.prototype.highlight = function(tag) {
       return $(".icon-" + tag).parent("li").addClass("active");
+    };
+
+    Menu.prototype.toggleMenuButtons = function(el, buttons) {
+      return $(el).find(buttons).parent("li").addClass("dante-menu-button--disabled");
     };
 
     Menu.prototype.show = function() {
