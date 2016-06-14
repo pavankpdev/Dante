@@ -10881,7 +10881,7 @@ if ( typeof define === "function" ) {
     defaults: {
       image_placeholder: '../images/dante/media-loading-placeholder.png'
     },
-    version: "0.1.2"
+    version: "0.1.3"
   };
 
 }).call(this);
