@@ -24,6 +24,8 @@ import defaultTheme from "../styled/themes/default";
 import { extensionFactory } from "../blocks/extension";
 import CodeBlock from "../blocks/code";
 
+import ImageUploader from "../plugins/ImageUploader";
+
 import { defaultPlugins as factoryPlugins } from "../index";
 
 import AddButton from "../popovers/addButton";
@@ -46,6 +48,10 @@ export default function Editor({
   bodyPlaceholder,
   extensions,
 }) {
+  console.log({ widgets });
+
+  const [showImageUploadPlugin, setShowImageUploadPlugin] =
+    React.useState(false);
   function basePlugins() {
     return [
       StarterKit.configure({
@@ -141,6 +147,10 @@ export default function Editor({
 
   return (
     <ThemeProvider theme={resolvedTheme}>
+      <ImageUploader
+        showImageUploadPlugin={showImageUploadPlugin}
+        setShowImageUploadPlugin={setShowImageUploadPlugin}
+      />
       <EditorContainer
       //style={{width: '600px', margin: '0 auto'}}
       >
@@ -155,18 +165,23 @@ export default function Editor({
 
           {editor && !fixed && (
             <FloatingMenu editor={editor}>
-              {isPopOverEnabledFor("AddButton") && (
-                <div style={{ position: "absolute", top: -15, left: -60 }}>
-                  <AddButton
-                    //ref={sideBarControls}
-                    fixed={fixed}
-                    position={{}}
-                    editor={editor}
-                    display={true || "displaySidebar"}
-                    widgets={optionalPlugins()}
-                  />
-                </div>
-              )}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 25,
+                  left: -25,
+                }}
+              >
+                <AddButton
+                  //ref={sideBarControls}
+                  fixed={fixed}
+                  position={{}}
+                  editor={editor}
+                  display={true || "displaySidebar"}
+                  widgets={optionalPlugins()}
+                  setShowImageUploadPlugin={setShowImageUploadPlugin}
+                />
+              </div>
             </FloatingMenu>
           )}
 
@@ -179,6 +194,7 @@ export default function Editor({
               position={{ width: "100%" }}
               display={true || "displaySidebar"}
               widgets={optionalPlugins()}
+              setShowImageUploadPlugin={setShowImageUploadPlugin}
             />
           )}
         </div>

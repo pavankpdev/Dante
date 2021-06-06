@@ -157,16 +157,6 @@ export default function MenuBar({ editor, fixed }) {
             <span className={"dante-icon"}>{italic()}</span>
           </li>
 
-          <DanteTooltipColor
-            styles={{}}
-            editor={editor}
-            enableLinkMode={_enableLinkMode}
-            value={"#000"}
-            style_type="color"
-            handleClick={_clickBlockInlineStyle}
-            show={show}
-          />
-
           <DanteTooltipLink
             selected={editor.isActive("link")}
             editor={editor}

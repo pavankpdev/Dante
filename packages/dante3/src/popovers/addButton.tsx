@@ -10,10 +10,20 @@ const AddButton = React.forwardRef(
       widgets: any;
       editor: any;
       fixed: any;
+      setShowImageUploadPlugin: any;
     },
     ref: any
   ) => {
-    const { display, position, widgets, editor, fixed } = props;
+    const {
+      display,
+      position,
+      widgets,
+      editor,
+      fixed,
+      setShowImageUploadPlugin,
+    } = props;
+    console.log({ widgets });
+
     const [scaled, setScaled] = React.useState(false);
     const [scaledWidth, setScaledWidth] = React.useState(
       fixed ? "100%" : "0px"
@@ -157,51 +167,85 @@ const AddButton = React.forwardRef(
       return insertImage(fileList[0]);
     }
 
-    return (
-      <InlinetooltipWrapper
-        ref={ref}
-        className={`inlineTooltip ${activeClass()} ${scaledClass()}`}
-        style={position}
-      >
-        {!fixed && (
-          <button
-            type="button"
-            className="inlineTooltip-button control"
-            title="Close Menu"
-            data-action="inline-menu"
-            onMouseDown={_toggleScaled}
-          >
-            {add()}
-          </button>
-        )}
+    function onMouseDown(e, item) {
+      e.preventDefault();
+      return clickHandler(e, item.tag);
+    }
 
-        <div
-          className={`inlineTooltip-menu ${
-            fixed ? "inlineTooltip-menu-fixed" : ""
-          }`}
-          style={{ width: `${fixed ? "-1" : scaledWidth}` }}
-        >
+    return (
+      // <InlinetooltipWrapper
+      //   ref={ref}
+      //   className={`inlineTooltip ${activeClass()} ${scaledClass()}`}
+      //   style={position}
+      // >
+      //   {!fixed && (
+      //     <button
+      //       type="button"
+      //       className="inlineTooltip-button control"
+      //       title="Close Menu"
+      //       data-action="inline-menu"
+      //       onMouseDown={_toggleScaled}
+      //     >
+      //       henlo
+      //     </button>
+      //   )}
+
+      //   <div
+      //     className={`inlineTooltip-menu ${
+      //       fixed ? "inlineTooltip-menu-fixed" : ""
+      //     }`}
+      //     style={{ width: `${fixed ? "-1" : scaledWidth}` }}
+      //   >
+      //     {getItems().map((item, i) => {
+      //       return (
+      //         <InlineTooltipItem
+      //           title={""}
+      //           item={item}
+      //           key={i}
+      //           clickHandler={clickHandler}
+      //         />
+      //       );
+      //     })}
+
+      //     <input
+      //       type="file"
+      //       accept="image/*"
+      //       style={{ display: "none" }}
+      //       ref={fileInput}
+      //       multiple={true}
+      //       onChange={handleFileInput}
+      //     />
+      //   </div>
+      // </InlinetooltipWrapper>
+      <>
+        <div className="flex gap-3">
           {getItems().map((item, i) => {
             return (
-              <InlineTooltipItem
-                title={""}
-                item={item}
-                key={i}
-                clickHandler={clickHandler}
-              />
+              <button
+                onClick={(e) => onMouseDown(e, item)}
+                className="text-gray-500 text-sm border-2	border-gray-300	border-dashed px-6 py-2 hover:bg-gray-100 focus:bg-gray-200 "
+              >
+                {item.name}
+              </button>
             );
           })}
-
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            ref={fileInput}
-            multiple={true}
-            onChange={handleFileInput}
-          />
+          {/* <button
+            onClick={() => setShowImageUploadPlugin(true)}
+            className="text-gray-500 text-sm border-2	border-gray-300	border-dashed px-6 py-2 hover:bg-gray-100 focus:bg-gray-200 "
+          >
+            Image
+          </button>
+          <button className="text-gray-500 text-sm border-2	border-gray-300	border-dashed px-6 py-2 hover:bg-gray-100 focus:bg-gray-200 ">
+            Video
+          </button>
+          <button className="text-gray-500 text-sm border-2	border-gray-300	border-dashed px-6 py-2 hover:bg-gray-100 focus:bg-gray-200 ">
+            Iframe
+          </button>
+          <button className="text-gray-500 text-sm border-2	border-gray-300	border-dashed px-6 py-2 hover:bg-gray-100 focus:bg-gray-200 ">
+            Divider
+          </button> */}
         </div>
-      </InlinetooltipWrapper>
+      </>
     );
   }
 );

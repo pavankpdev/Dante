@@ -3,3 +3,7 @@ node_modules
 packages/**/*/package
 
 .vercel
+
+yarn.lock
+
+yarn-error.log
